@@ -1,0 +1,52 @@
+name: 'OpenTofu CI/CD for Starfleet Project'
+
+on:
+  # Trigger the workflow on pushes to the main branch
+  push:
+    branches:
+      - main
+  # Also trigger on pull requests to the main branch
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  tofu:
+    name: 'OpenTofu Plan & Apply'
+    runs-on: ubuntu-latest
+    env:
+      # Set environment variables from GitHub Secrets for authentication
+      # These are used by OpenTofu for the Azure backend and Vault provider
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      BAO_ADDR: ${{ secrets.BAO_ADDR }}
+      BAO_TOKEN: ${{ secrets.BAO_TOKEN }}
+
+    # All steps will run inside the 'terraform' directory
+    defaults:
+      run:
+        working-directory: ./terraform
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup OpenTofu
+      uses: opentofu/setup-opentofu@v1
+      with:
+        tofu_version: '1.6.2' # Use the version of OpenTofu you are using
+
+    - name: OpenTofu Init
+      id: init
+      run: tofu init
+
+    - name: OpenTofu Plan
+      id: plan
+      run: tofu plan -no-color
+
+    - name: OpenTofu Apply
+      # This step only runs if the workflow was triggered by a push to the main branch
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: tofu apply -auto-approve

@@ -20,13 +20,13 @@ sudo docker logs openbao
 # --- Configurer votre terminal pour communiquer avec OpenBao ---
 echo "onfiguration de l'environnement..."
 export BAO_ADDR='http://127.0.0.1:8200'
-export BAO_TOKEN='hvs.S4bIugyJKMX5YYJZRV6lI4I4' # <<< REMPLACEZ PAR VOTRE TOKEN ROOT RÉEL >>>
+export BAO_TOKEN='<your-root-token>' # <<< REMPLACEZ PAR VOTRE TOKEN ROOT RÉEL >>>
 echo "BAO_ADDR et BAO_TOKEN sont configurés."
 
 # --- Activer le moteur de secrets Key/Value (KV) ---
 echo ""Activation du moteur de secrets KV..."
 # Cette commande active le stockage de secrets KV dans OpenBao.
-sudo docker exec -e VAULT_ADDR='http://127.0.0.1:8200' -e VAULT_TOKEN='hvs.S4bIugyJKMX5YYJZRV6lI4I4' openbao vault secrets enable kv
+sudo docker exec -e VAULT_ADDR='http://127.0.0.1:8200' -e VAULT_TOKEN='<your-root-token>' openbao vault secrets enable kv
 
 # --- Créer les variables d'environnement pour les identifiants Azure ---
 echo "Préparation des identifiants Azure..."

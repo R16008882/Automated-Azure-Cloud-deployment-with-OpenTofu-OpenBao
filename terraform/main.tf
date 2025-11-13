@@ -3,7 +3,7 @@ provider "vault" {
   address = "http://127.0.0.1:8200"
   # Note: Using the root token directly is not recommended for production.
   # Consider using a more secure authentication method like AppRole.
-  token   = "hvs.S4bIugyJKMX5YYJZRV6lI4I4"
+  token   = "<your-root-token>"
 }
 
 # 2. Read the secret from the path you created
